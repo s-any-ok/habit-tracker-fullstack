@@ -133,8 +133,13 @@ frontend/src/
 ```bash
 git clone <repository-url>
 cd fullstack
+
+# Install dependencies for both projects
 cd backend && npm install
 cd ../frontend && npm install
+
+# Or use the convenient script
+npm run install:all
 ```
 
 ### 2. Database Setup
@@ -364,13 +369,37 @@ Authorization: Bearer <jwt-token>
 - **100% TypeScript**: Type-safe codebase
 - **Performance optimized**: React.memo, useCallback, useMemo throughout
 
+## 🔄 Git Workflow
+
+This is a unified monorepo containing both backend and frontend:
+
+```bash
+# Check status of both projects
+git status
+
+# Add changes from both projects
+git add .
+
+# Commit changes
+git commit -m "feat: add new feature"
+
+# Push changes
+git push origin main
+```
+
+### Branch Structure
+- `main` - Production-ready code
+- `develop` - Integration branch
+- `feature/*` - Feature branches
+- `hotfix/*` - Critical fixes
+
 ## 🤝 Contributing
 
 1. Fork the repository
 2. Create a feature branch: `git checkout -b feature/amazing-feature`
 3. Make changes and run tests
 4. Format code: `npm run format`
-5. Commit changes: `git commit -m 'Add amazing feature'`
+5. Commit changes: `git commit -m 'feat: add amazing feature'`
 6. Push to branch: `git push origin feature/amazing-feature`
 7. Open a Pull Request
 
