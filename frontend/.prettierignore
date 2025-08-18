@@ -1,0 +1,7 @@
+node_modules
+build
+public
+*.log
+.env
+.env.*
+coverage
