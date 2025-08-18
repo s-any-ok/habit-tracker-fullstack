@@ -388,6 +388,7 @@ git push origin main
 ```
 
 ### Branch Structure
+
 - `main` - Production-ready code
 - `develop` - Integration branch
 - `feature/*` - Feature branches
