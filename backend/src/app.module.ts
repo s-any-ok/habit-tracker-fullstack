@@ -6,6 +6,7 @@ import { HabitsModule } from './habits/habits.module';
 import { User } from 'src/entities';
 import { Habit } from 'src/entities';
 import { HabitEntry } from 'src/entities';
+import { AppController } from './app.controller';
 
 @Module({
   imports: [
@@ -38,5 +39,6 @@ import { HabitEntry } from 'src/entities';
     AuthModule,
     HabitsModule,
   ],
+  controllers: [AppController],
 })
 export class AppModule {}
