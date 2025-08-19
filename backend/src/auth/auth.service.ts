@@ -4,8 +4,9 @@ import { Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
 import { User } from 'src/entities';
 
-type GoogleUser = {
-  googleId: string;
+type GitHubUser = {
+  githubId: string;
+  username: string;
   email: string;
   name: string;
   avatar?: string;
@@ -19,22 +20,25 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async validateGoogleUser(googleUser: GoogleUser): Promise<User> {
+  async validateGitHubUser(githubUser: GitHubUser): Promise<User> {
     let user = await this.userRepository.findOne({
-      where: { googleId: googleUser.googleId },
+      where: { githubId: githubUser.githubId },
     });
 
     if (!user) {
       user = await this.userRepository.findOne({
-        where: { email: googleUser.email },
+        where: { email: githubUser.email },
       });
 
       if (user) {
-        user.googleId = googleUser.googleId;
-        user.avatar = googleUser.avatar;
+        user.githubId = githubUser.githubId;
+        user.avatar = githubUser.avatar;
         await this.userRepository.save(user);
       } else {
-        user = this.userRepository.create(googleUser);
+        user = this.userRepository.create({
+          ...githubUser,
+          googleId: null,
+        });
         await this.userRepository.save(user);
       }
     }

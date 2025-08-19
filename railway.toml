@@ -17,3 +17,7 @@ startCommand = "npm run start:prod"
 
 [services.build.variables]
 NODE_VERSION = "20"
+
+[services.deploy.variables]
+PORT = "3001"
+NODE_ENV = "production"
