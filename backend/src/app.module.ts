@@ -1,9 +1,11 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User, Habit, HabitEntry } from './entities';
 import { AuthModule } from './auth/auth.module';
 import { HabitsModule } from './habits/habits.module';
+import { User } from 'src/entities';
+import { Habit } from 'src/entities';
+import { HabitEntry } from 'src/entities';
 
 @Module({
   imports: [
@@ -14,13 +16,22 @@ import { HabitsModule } from './habits/habits.module';
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
         type: 'postgres',
-        host: configService.get('DATABASE_HOST'),
-        port: +configService.get('DATABASE_PORT'),
-        username: configService.get('DATABASE_USER'),
-        password: configService.get('DATABASE_PASSWORD'),
-        database: configService.get('DATABASE_NAME'),
+        host: configService.get('DB_HOST'),
+        port: parseInt(configService.get('DB_PORT') || '5432'),
+        username: configService.get('DB_USERNAME'),
+        password: configService.get('DB_PASSWORD'),
+        database: configService.get('DB_DATABASE'),
         entities: [User, Habit, HabitEntry],
-        synchronize: true,
+        synchronize: configService.get('NODE_ENV') !== 'production',
+        ssl: {
+          rejectUnauthorized: false,
+        },
+        extra: {
+          connectionTimeoutMillis: 60000,
+          query_timeout: 60000,
+          statement_timeout: 60000,
+        },
+        logging: configService.get('NODE_ENV') === 'development',
       }),
       inject: [ConfigService],
     }),
