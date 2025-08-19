@@ -23,6 +23,7 @@ import { AppController } from './app.controller';
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_DATABASE'),
         entities: [User, Habit, HabitEntry],
+        migrations: [__dirname + '/migrations/*.ts'],
         synchronize: configService.get('NODE_ENV') !== 'production',
         ssl: {
           rejectUnauthorized: false,
