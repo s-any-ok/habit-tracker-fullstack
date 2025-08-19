@@ -12,16 +12,26 @@ type GitHubProfile = {
   photos: Array<{ value: string }>;
 };
 
+type VerifyCallback = (error: any, user?: any) => void;
+
 @Injectable()
 export class GitHubStrategy extends PassportStrategy(Strategy, 'github') {
   constructor(
     private configService: ConfigService,
     private authService: AuthService,
   ) {
+    const clientID = configService.get<string>('GITHUB_CLIENT_ID');
+    const clientSecret = configService.get<string>('GITHUB_CLIENT_SECRET');
+    const callbackURL = configService.get<string>('GITHUB_CALLBACK_URL');
+
+    if (!clientID || !clientSecret || !callbackURL) {
+      throw new Error('GitHub OAuth configuration is missing');
+    }
+
     super({
-      clientID: configService.get<string>('GITHUB_CLIENT_ID'),
-      clientSecret: configService.get<string>('GITHUB_CLIENT_SECRET'),
-      callbackURL: configService.get<string>('GITHUB_CALLBACK_URL'),
+      clientID,
+      clientSecret,
+      callbackURL,
       scope: ['user:email'],
     });
   }
@@ -30,8 +40,8 @@ export class GitHubStrategy extends PassportStrategy(Strategy, 'github') {
     _accessToken: string,
     _refreshToken: string,
     profile: GitHubProfile,
-    done: any,
-  ): Promise<any> {
+    done: VerifyCallback,
+  ): Promise<void> {
     const { id, username, displayName, emails, photos } = profile;
 
     const user = await this.authService.validateGitHubUser({

@@ -33,11 +33,15 @@ export class AuthService {
       if (user) {
         user.githubId = githubUser.githubId;
         user.avatar = githubUser.avatar;
+        user.username = githubUser.username;
         await this.userRepository.save(user);
       } else {
         user = this.userRepository.create({
-          ...githubUser,
-          googleId: null,
+          githubId: githubUser.githubId,
+          username: githubUser.username,
+          email: githubUser.email,
+          name: githubUser.name,
+          avatar: githubUser.avatar,
         });
         await this.userRepository.save(user);
       }
